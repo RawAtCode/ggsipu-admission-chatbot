@@ -18,6 +18,9 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 # ✅ Define FastAPI app first
 app = FastAPI()
+@app.get("/")
+def read_root():
+    return {"message": "Server is running!"}
 
 # ✅ Apply CORS middleware after app definition
 app.add_middleware(
@@ -108,7 +111,7 @@ def get_answer(user_question):
 
         Answer:
         """
-        
+
         model = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.3)
         prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
         chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
