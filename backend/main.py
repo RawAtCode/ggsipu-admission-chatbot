@@ -25,7 +25,7 @@ def read_root():
 # ✅ Apply CORS middleware after app definition
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://ai-chatbot-lg1b.onrender.com/"],  # Change to specific frontend URL if needed
+    allow_origins = [os.getenv("FRONTEND_URL", "*")],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -51,9 +51,8 @@ def load_pdfs():
     for pdf_file in pdf_files:
         pdf_reader = PdfReader(os.path.join(PDF_FOLDER, pdf_file))
         for page in pdf_reader.pages:
-            page_text = page.extract_text()
-            if page_text:
-                text += page_text
+            page_text = page.extract_text() if page.extract_text() else ""
+            text += page_text
 
     return text
 
@@ -129,7 +128,5 @@ def ask_question(request: QuestionRequest):
     return {"answer": answer}
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
-    free_port(port)
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=port)

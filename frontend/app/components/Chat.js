@@ -2,24 +2,23 @@
 
 import { useState } from "react";
 import axios from "axios";
-import { marked } from "marked"; // Import Markdown Parser
-import { link } from './../../node_modules/mdast-util-to-hast/lib/handlers/link';
+import { marked } from "marked";
+import DOMPurify from "dompurify";
 
 export default function Chat() {
   const [question, setQuestion] = useState("");
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
+
   const askQuestion = async () => {
-    if (!question) return;
+    if (!question.trim()) return;
     setLoading(true);
     setResponse("");
 
     try {
-      const BACKEND_URL = "https://ai-chatbot-9thn.onrender.com/"; // Render backend URL
       const res = await axios.post(`${BACKEND_URL}/ask`, { question });
-
-      // const res = await axios.post("http://127.0.0.1:8000/ask", { question });
       setResponse(res.data.answer || "No response received.");
     } catch (error) {
       console.error("Error fetching response:", error);
@@ -30,7 +29,7 @@ export default function Chat() {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && question.trim()) {
       askQuestion();
     }
   };
@@ -51,7 +50,6 @@ export default function Chat() {
         <button
           onClick={askQuestion}
           className="w-full mt-4 bg-[rgba(2,72,88,0.6)] hover:bg-[rgba(2,90,110,0.8)] active:scale-95 text-white py-2 px-4 rounded-md transition-transform"
-
           disabled={loading}
         >
           {loading ? "Retrieving Info..." : "Ask"}
@@ -60,10 +58,10 @@ export default function Chat() {
 
       {response && (
         <div
-          className="mt-6 p-4 bg-gray-700 rounded-lg w-full max-w-2xl max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
+          className="mt-6 p-4 bg-gray-700 rounded-lg w-full max-w-2xl max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 break-words"
         >
           <div className="mt-2 text-white"
-            dangerouslySetInnerHTML={{ __html: marked(response) }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(marked(response)) }}
           />
         </div>
       )}
