@@ -16,7 +16,7 @@ export default function Chat() {
     setResponse("");
 
     try {
-      const BACKEND_URL = "https://ai-chatbot-lg1b.onrender.com"; // Your actual Render backend URL
+      const BACKEND_URL = "https://ai-chatbot-9thn.onrender.com/"; // Render backend URL
       const res = await axios.post(`${BACKEND_URL}/ask`, { question });
 
       // const res = await axios.post("http://127.0.0.1:8000/ask", { question });
