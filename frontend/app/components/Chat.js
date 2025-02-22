@@ -68,7 +68,7 @@ export default function Chat() {
 
       <footer className="absolute bottom-4 w-full flex justify-center">
         <p className="text-gray-400">
-          Developed by{" "}
+          Developed with ❤️ by{" "}
           <a
             href="https://github.com/RawAtCode"
             target="_blank"
