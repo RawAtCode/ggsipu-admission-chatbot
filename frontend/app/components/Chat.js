@@ -16,7 +16,10 @@ export default function Chat() {
     setResponse("");
 
     try {
-      const res = await axios.post("http://127.0.0.1:8000/ask", { question });
+      const BACKEND_URL = "https://ai-chatbot-lg1b.onrender.com"; // Your actual Render backend URL
+      const res = await axios.post(`${BACKEND_URL}/ask`, { question });
+
+      // const res = await axios.post("http://127.0.0.1:8000/ask", { question });
       setResponse(res.data.answer || "No response received.");
     } catch (error) {
       console.error("Error fetching response:", error);
