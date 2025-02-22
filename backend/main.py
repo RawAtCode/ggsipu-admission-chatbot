@@ -22,13 +22,19 @@ app = FastAPI()
 def read_root():
     return {"message": "Server is running!"}
 
+origins = [
+    "https://admission-chatbot.vercel.app",  # Frontend on Vercel
+    "http://localhost:3000",  # Local Development
+]
+
+
 # ✅ Apply CORS middleware after app definition
 app.add_middleware(
     CORSMiddleware,
-    allow_origins = ["*"],
+    allow_origins=origins,  # Securely allow only these origins
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],  # Explicitly allow these methods
+    allow_headers=["Authorization", "Content-Type"],  # Allow specific headers
 )
 
 # Define local PDF folder
