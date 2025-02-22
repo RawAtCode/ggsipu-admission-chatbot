@@ -129,6 +129,7 @@ def ask_question(request: QuestionRequest):
     return {"answer": answer}
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))  # Render sets PORT dynamically
+    port = int(os.environ.get("PORT", 8000))
+    free_port(port)
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=port)
