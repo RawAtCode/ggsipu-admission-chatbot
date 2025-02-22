@@ -51,8 +51,9 @@ def load_pdfs():
     for pdf_file in pdf_files:
         pdf_reader = PdfReader(os.path.join(PDF_FOLDER, pdf_file))
         for page in pdf_reader.pages:
-            page_text = page.extract_text() if page.extract_text() else ""
-            text += page_text
+            page_text = page.extract_text()
+            if page_text:
+                text += page_text
 
     return text
 
