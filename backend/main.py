@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import os
+import time
 from PyPDF2 import PdfReader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
@@ -12,33 +13,29 @@ from langchain.chains.question_answering import load_qa_chain
 from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv
 
-# Load environment variables
+# ✅ Load environment variables
 load_dotenv()
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
-# ✅ Define FastAPI app first
+# ✅ Initialize FastAPI app
 app = FastAPI()
+
 @app.get("/")
 def read_root():
     return {"message": "Server is running!"}
 
-origins = [
-    "https://admission-chatbot.vercel.app",  # Frontend on Vercel
-    "http://localhost:3000",  # Local Development
-]
-
-
-# ✅ Apply CORS middleware after app definition
+# ✅ Define allowed origins (CORS Fix)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # Securely allow only these origins
+    allow_origins=["*"],  # Change to specific domains in production
     allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS"],  # Explicitly allow these methods
-    allow_headers=["Authorization", "Content-Type"],  # Allow specific headers
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["*"],
 )
 
-# Define local PDF folder
+# ✅ Define local PDF folder
 PDF_FOLDER = "./pdfs"
+FAISS_INDEX_PATH = "./faiss_index"
 
 def load_pdfs():
     """ Load and process PDFs from the local folder """
@@ -78,18 +75,23 @@ def create_vector_store():
 
         text_chunks = get_text_chunks(raw_text)
         embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+
+        # Ensure FAISS index directory exists
+        os.makedirs(FAISS_INDEX_PATH, exist_ok=True)
+
         vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
-        vector_store.save_local("faiss_index")
-        print("✅ FAISS index created successfully!")
+        vector_store.save_local(FAISS_INDEX_PATH)
+        print(f"✅ FAISS index created successfully at {FAISS_INDEX_PATH}!")
 
     except Exception as e:
         print(f"❌ Error creating FAISS index: {e}")
 
-# ✅ Run vector store creation in a separate thread (non-blocking)
-import threading
-threading.Thread(target=create_vector_store, daemon=True).start()
+# ✅ Run vector store creation before starting the API
+print("⏳ Creating FAISS vector store...")
+create_vector_store()
+time.sleep(3)  # Ensure FAISS is created before the API starts
 
-# Define request model
+# ✅ Define request model
 class QuestionRequest(BaseModel):
     question: str
 
@@ -97,9 +99,16 @@ def get_answer(user_question):
     """ Retrieve answer from FAISS index """
     try:
         embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-        new_db = FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
+
+        # ✅ Ensure FAISS index exists before loading
+        if not os.path.exists(f"{FAISS_INDEX_PATH}/index.faiss"):
+            print("❌ FAISS index file not found! Ensure it is created before querying.")
+            return "Apologies! The system is still initializing. Please try again in a few minutes."
+
+        new_db = FAISS.load_local(FAISS_INDEX_PATH, embeddings, allow_dangerous_deserialization=True)
         docs = new_db.similarity_search(user_question)
-        
+
+        # ✅ Gemini Prompt Template
         prompt_template = """
         Answer the question as detailed as possible from the provided context. 
 
@@ -134,16 +143,8 @@ def ask_question(request: QuestionRequest):
     answer = get_answer(request.question)
     return {"answer": answer}
 
-# if __name__ == "__main__":
-#     import uvicorn
-#     uvicorn.run(app, host="0.0.0.0", port=port)
-
+# ✅ Start FastAPI server
 if __name__ == "__main__":
-    import threading
-
-    # Run FAISS vector store creation in a separate thread
-    threading.Thread(target=create_vector_store, daemon=True).start()
-
-    # Start FastAPI server
+    print("🚀 Starting FastAPI server...")
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", 10000)))
