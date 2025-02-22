@@ -41,6 +41,7 @@ export default function Chat() {
       <div className="w-full max-w-2xl bg-gray-800 p-6 rounded-lg shadow-md">
         <input
           type="text"
+          id="query-field"
           className="w-full p-3 text-black rounded-md"
           placeholder="How may I help you?"
           value={question}
