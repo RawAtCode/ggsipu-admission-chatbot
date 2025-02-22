@@ -25,7 +25,7 @@ def read_root():
 # ✅ Apply CORS middleware after app definition
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Change to specific frontend URL if needed
+    allow_origins=["https://ai-chatbot-lg1b.onrender.com/"],  # Change to specific frontend URL if needed
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -127,3 +127,8 @@ def ask_question(request: QuestionRequest):
     """ API endpoint to get answers from the AI model """
     answer = get_answer(request.question)
     return {"answer": answer}
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))  # Render sets PORT dynamically
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=port)
