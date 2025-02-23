@@ -27,7 +27,10 @@ def read_root():
 # ✅ Define allowed origins (CORS Fix)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Change to specific domains in production
+    allow_origins=[
+        "https://admission-chatbot.vercel.app",  # ✅ Use your actual frontend URL
+        "http://localhost:3000"  # ✅ Allow local testing
+    ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
