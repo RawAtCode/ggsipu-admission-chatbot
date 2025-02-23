@@ -32,7 +32,7 @@ app.add_middleware(
         "http://localhost:3000"  # ✅ Allow local testing
     ],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
@@ -101,17 +101,32 @@ class QuestionRequest(BaseModel):
 def get_answer(user_question):
     """ Retrieve answer from FAISS index """
     try:
-        embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-
-        # ✅ Ensure FAISS index exists before loading
+        print("🔍 Checking FAISS index file...")
+        
         if not os.path.exists(f"{FAISS_INDEX_PATH}/index.faiss"):
             print("❌ FAISS index file not found! Ensure it is created before querying.")
             return "Apologies! The system is still initializing. Please try again in a few minutes."
 
-        new_db = FAISS.load_local(FAISS_INDEX_PATH, embeddings, allow_dangerous_deserialization=True)
-        docs = new_db.similarity_search(user_question)
+        print("✅ FAISS index found! Loading FAISS...")
+        embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 
-        # ✅ Gemini Prompt Template
+        try:
+            new_db = FAISS.load_local(FAISS_INDEX_PATH, embeddings, allow_dangerous_deserialization=True)
+            print("✅ FAISS index loaded successfully!")
+        except Exception as e:
+            print(f"❌ Error loading FAISS: {e}")
+            return f"❌ Error loading FAISS index: {e}"
+
+        print("🔍 Searching similar documents...")
+        docs = new_db.similarity_search(user_question)
+        print(f"✅ Retrieved {len(docs)} similar docs")
+
+        if not docs:
+            print("⚠️ No relevant documents found.")
+            return "Apologies! No relevant information found."
+
+        print("🤖 Generating AI response...")
+        model = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.3)
         prompt_template = """
         Answer the question as detailed as possible from the provided context. 
 
@@ -130,15 +145,19 @@ def get_answer(user_question):
         Answer:
         """
 
-        model = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.3)
+        from langchain.prompts import PromptTemplate
         prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
         chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
-        
+
         response = chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
+        print("✅ AI Response Generated!")
+
         return response["output_text"]
 
     except Exception as e:
-        return f"❌ Error retrieving answer: {e}"
+        print(f"❌ Error retrieving answer: {e}")
+        return f"❌ Error: {e}"
+
 
 @app.post("/ask")
 def ask_question(request: QuestionRequest):
