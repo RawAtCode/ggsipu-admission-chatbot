@@ -97,8 +97,8 @@ The frontend should now be running at **`http://localhost:3000/`** 🎉
 ---
 
 ## **👨‍💻 Contributors**
-- **Rawat** ([@rawatcode](https://github.com/rawatcode))  
-- **Yash Singh** ([@Yash18Singh](https://github.com/Yash18Singh))  
+- **Sandeep** ([@rawatcode](https://github.com/rawatcode))  
+- **Yashwant** ([@Yash18Singh](https://github.com/Yash18Singh))  
 
 ---
 
