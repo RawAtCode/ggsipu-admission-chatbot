@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import axios from "axios";
-import ReactMarkdown from "react-markdown";
+import { marked } from "marked";
 import DOMPurify from "dompurify";
 import Header from "./Header";
 import Footer from "./Footer";
@@ -24,7 +24,7 @@ export default function Chat() {
       setResponse(res.data.answer || "No response received.");
     } catch (error) {
       console.error("Error fetching response:", error);
-      setResponse("❌ Failed to get a response. Please try again.");
+      setResponse("Failed to get a response. Try again!");
     }
 
     setLoading(false);
@@ -37,12 +37,12 @@ export default function Chat() {
   };
 
   return (
-    <div className="app-body">
-      <Header />
+    <div className='app-body'>
+      <Header/>
 
       <div className="container">
         <div className="container-heading">
-          <h1>GGSIPU Admission Chatbot</h1>
+            <h1>GGSIPU Admission Chatbot</h1>
         </div>
 
         <div className="input-container">
@@ -54,23 +54,29 @@ export default function Chat() {
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             onKeyDown={handleKeyDown}
-            disabled={loading}
           />
-          <button onClick={askQuestion} className="ask-button" disabled={loading}>
+          <button
+            onClick={askQuestion}
+            className="ask-button"
+            disabled={loading}
+          >
             {loading ? "Retrieving Info..." : "Ask"}
           </button>
         </div>
 
         {response && (
           <div className="response-container">
-            <ReactMarkdown className="response-content">
-              {DOMPurify.sanitize(response)}
-            </ReactMarkdown>
+            <div
+              className="response-content"
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(marked(response)) }}
+            />
           </div>
         )}
+
       </div>
 
-      <Footer />
+      <Footer/>
     </div>
+   
   );
 }
