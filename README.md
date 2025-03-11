@@ -96,19 +96,6 @@ The frontend should now be running at **`http://localhost:3000/`** 🎉
 
 ---
 
-## **📸 Screenshots (Optional)**
-_Add some images here if you want, like chatbot UI screenshots._  
-
----
-
-## **💡 Future Improvements**
-🔹 Add support for **multiple document sources**  
-🔹 Improve **response formatting**  
-🔹 Implement **user authentication**  
-🔹 Enhance **error handling**  
-
----
-
 ## **👨‍💻 Contributors**
 - **Rawat** ([@rawatcode](https://github.com/rawatcode))  
 - **Yash Singh** ([@Yash18Singh](https://github.com/Yash18Singh))  
@@ -117,7 +104,3 @@ _Add some images here if you want, like chatbot UI screenshots._
 
 ## **📜 License**
 This project is **open-source** and available under the **MIT License**.  
-
----
-
-### **🚀 Happy Coding! 🎉**  
