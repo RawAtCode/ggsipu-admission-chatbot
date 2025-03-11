@@ -14,13 +14,13 @@ export default function Chat() {
 
   const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
 
-  const askQuestion = async () => {
-    if (!question.trim()) return;
+  const askQuestion = async (query) => {
+    if (!query.trim()) return;
     setLoading(true);
     setResponse("");
 
     try {
-      const res = await axios.post(`${BACKEND_URL}/ask`, { question });
+      const res = await axios.post(`${BACKEND_URL}/ask`, { question: query });
       setResponse(res.data.answer || "No response received.");
     } catch (error) {
       console.error("Error fetching response:", error);
@@ -32,19 +32,28 @@ export default function Chat() {
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && question.trim()) {
-      askQuestion();
+      askQuestion(question);
     }
   };
 
+  const handleFAQClick = (faq) => {
+    setQuestion(faq);
+    askQuestion(faq);
+  };
+
   return (
-    <div className='app-body'>
-      <Header/>
+    <div className="app-body">
+      <Header />
 
       <div className="container">
         <div className="container-heading">
-            <h1>GGSIPU Admission Chatbot</h1>
+          <h1>GGSIPU Admission Chatbot</h1>
+          <p className="text-gray-700 text-center mt-2 max-w-2xl">
+            Ask me anything about admission queries. I'm here to assist you!
+          </p>
         </div>
 
+        {/* Input Section */}
         <div className="input-container">
           <input
             type="text"
@@ -56,7 +65,7 @@ export default function Chat() {
             onKeyDown={handleKeyDown}
           />
           <button
-            onClick={askQuestion}
+            onClick={() => askQuestion(question)}
             className="ask-button"
             disabled={loading}
           >
@@ -64,6 +73,7 @@ export default function Chat() {
           </button>
         </div>
 
+        {/* Response Section */}
         {response && (
           <div className="response-container">
             <div
@@ -73,10 +83,32 @@ export default function Chat() {
           </div>
         )}
 
+        {/* FAQ Section */}
+        {!response && (
+          <div className="response-container">
+            <h2 className="text-xl font-bold text-gray-800 mb-3 text-center">
+              Frequently Asked Questions
+            </h2>
+            <ul className="space-y-3 text-gray-700">
+              {[
+                "What are the CET dates?",
+                "What is the fee structure for MCA?",
+                "What is the fee structure for B.Tech?",
+              ].map((faq, index) => (
+                <li
+                  key={index}
+                  className="p-3 bg-white rounded-lg shadow-sm border border-gray-300 cursor-pointer hover:bg-gray-100 transition"
+                  onClick={() => handleFAQClick(faq)}
+                >
+                  <strong>‣ {faq}</strong>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
 
-      <Footer/>
+      <Footer />
     </div>
-   
   );
 }

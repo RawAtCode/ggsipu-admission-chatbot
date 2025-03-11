@@ -128,13 +128,20 @@ def get_answer(user_question):
         print("🤖 Generating AI response...")
         model = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.3)
         prompt_template = """
-        Answer the question as detailed as possible from the provided context. 
+        Answer the question in a well-structured format using **Markdown**:
 
-        - Use **bullet points** for lists.
-        - Separate different sections into **clear paragraphs**.
-        - Use *bold text* for important details.
-        - If the answer is not in the context, say 'Apologies! There is no information available regarding your query.'
-        - Do **not** provide incorrect answers.
+
+        - **Provide relevant details** from the context.
+        - Use `#` for the main heading (topic of discussion).
+        - Use `##` for subtopics.
+        - Use `###` for further breakdowns.
+        - Use **bold** for highlighting important terms.
+        - Use bullet points `-` to list items.
+        - Organize information into **sections**.
+        - Ensure proper spacing between sections.
+        - Ensure **at least two blank lines** between major sections.
+        - If the answer is not available, say:  
+        *"Apologies! There is no information available regarding your query."*
 
         Context:
         {context}
@@ -145,7 +152,6 @@ def get_answer(user_question):
         Answer:
         """
 
-        from langchain.prompts import PromptTemplate
         prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
         chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
 
