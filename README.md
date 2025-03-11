@@ -47,7 +47,7 @@ ai-chatbot/
 
 ### **1️⃣ Clone the Repository**
 ```sh
-git clone https://github.com/Yash18Singh/ai-chatbot.git
+git clone https://github.com/rawatcode/ai-chatbot.git
 cd ai-chatbot
 ```
 
