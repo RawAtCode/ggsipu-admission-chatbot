@@ -9,8 +9,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #ffffff;
+    --foreground: #000000;
   }
 }
 
@@ -18,6 +18,12 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.app-body{
+  display: flex;
+  flex-direction: column;
+  align-items:center;
 }
 
 ::-webkit-scrollbar {
@@ -39,3 +45,138 @@ body {
   background: rgba(2, 72, 88, 0.8);
 }
 
+.head-font{
+  font-size:40px;
+  font-weight:800;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center; /* Vertically center the items */
+  justify-content: center; /* Space between logo and title */
+  border-bottom: 1px solid black;
+  padding: 20px;
+  background-color: #041D54;
+  width: 100%;
+}
+
+
+.container{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height:'100%';
+  align-items: center;
+  padding:50px;
+  width:'100%';
+  gap:20px;
+}
+
+.container-heading{
+  text-align: center;
+}
+
+.container-heading > h1{
+  font-size:40px;
+  font-weight:800;
+}
+
+.input-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap:20px;
+  padding: 20px;
+  border: 1px solid black;
+  border-radius: 10px;
+  width:80%;
+  background-color: #041D54;
+  box-shadow:5px 5px 10px #000000;
+}
+.input-field{
+  padding: 20px;
+  margin: 10px;
+  font-size:18px;
+  border-radius: 5px;
+  box-shadow:5px 5px 1px rgb(0, 0, 0);
+}
+.ask-button{
+  padding: 10px;
+  margin: 10px;
+  font-size:18px;
+  border-radius: 5px;
+  border: 1px solid black;
+  background-color: #0077CC;
+  color: white;
+  cursor: pointer;
+}
+
+.response-container{
+  padding:30px;
+  border: 1px solid black;
+  box-shadow:0 0 5px black;
+  border-radius: 10px;
+  width:80%;
+  background-color: #F0F4F8;
+  color: #041D54;
+  margin-top:50px;
+}
+
+
+.footer{
+  display: flex;
+  flex-direction: row;
+  align-items: center; /* Vertically center the items */
+  justify-content: center; /* Space between logo and title */
+  border-bottom: 1px solid black;
+  padding: 50px;
+  background-color: #041D54;
+  width: 100%;
+}
+
+.footer > h1{
+  color: white;
+  font-size:18px;
+}
+
+
+@media (max-width: 900px) {
+  .container{
+    padding:20px;
+  }
+  .input-container{
+    width:100%;
+  }
+  .response-container{
+    width:100%;
+  }
+  .footer{
+    padding:20px;
+  }
+  .footer > h1{
+    color: white;
+    font-size:12px;
+  }
+}
+
+@media (max-width: 620px){
+  .head-font{
+    font-size:20px;
+  }
+  .container-heading > h1{
+    font-size:25px;
+  }
+  .input-field{
+    font-size:16px;
+  }
+  .ask-button{
+    font-size:16px;
+  }
+  .response-container{
+    padding:20px;
+  }
+  .footer > h1{
+    font-size:10px;
+  }
+}
