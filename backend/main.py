@@ -128,28 +128,22 @@ def get_answer(user_question):
         print("🤖 Generating AI response...")
         model = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.3)
         prompt_template = """
-        You are an AI chatbot assisting with admission queries. Answer the question using the provided context.  
-        Format your response in **Markdown** for readability.
+        Answer the question as detailed as possible from the provided context. 
 
-        ## 📌 **Response Guidelines**
-        - **Use headings** (`##`, `###`) for sections like *Eligibility, Documents, Fees*.
-        - **Use bullet points** (`✔️`, `➤`, `🔹`) for lists.
-        - **Use bold text** (`**important details**`) for key highlights.
-        - **Separate different sections with new lines** for readability.
-        - If **no relevant answer is found**, return:  
-        "_Apologies! There is no information available regarding your query._"
+        - Use **bullet points** for lists.
+        - Separate different sections into **clear paragraphs**.
+        - Use *bold text* for important details.
+        - If the answer is not in the context, say 'Apologies! There is no information available regarding your query.'
+        - Do **not** provide incorrect answers.
 
-        ---
-
-        ### 📖 **Context**
+        Context:
         {context}
 
-        ### ❓ **Question**
+        Question:
         {question}
 
-        ### ✅ **Answer**
+        Answer:
         """
-
 
         from langchain.prompts import PromptTemplate
         prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
