@@ -123,6 +123,7 @@ def get_answer(user_question):
         prompt_template = """
         Answer the question in a well-structured format using **Markdown**:  
 
+        - *IMPORTANT: DO NOT START THE RESPONSE LIKE A ROBOT, INSTEAD MAKE IT PROFESSIONAL*.  
         - Use `#` for main topics.  
         - Use `##` for subtopics.  
         - Use `###` for detailed sections.  
