@@ -130,8 +130,7 @@ def get_answer(user_question):
         - Use `-` for bullet points.
         - Maintain **proper spacing** between sections to improve readability.  
         - Ensure **at least two blank lines** between major sections.  
-        - If the answer is not available, guide the user to refer to the admission brochure or contact:  
-          📧 *For further assistance, please email us at* **pro[AT]ipu[Dot]ac[Dot]in**.  
+        - If the answer is not available, guide the user to refer to the admission brochure or contact on email at* **pro[AT]ipu[Dot]ac[Dot]in**.  
 
         Context:  
         {context}  
