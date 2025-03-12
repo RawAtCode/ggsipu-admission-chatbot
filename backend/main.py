@@ -13,30 +13,26 @@ from langchain.chains.question_answering import load_qa_chain
 from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv
 
-# ✅ Load environment variables
 load_dotenv()
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
-# ✅ Initialize FastAPI app
 app = FastAPI()
 
 @app.get("/")
 def read_root():
     return {"message": "Server is running!"}
 
-# ✅ Define allowed origins (CORS Fix)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://admission-chatbot.vercel.app",  # ✅ Use your actual frontend URL
-        "http://localhost:3000"  # ✅ Allow local testing
+        "https://admission-chatbot.vercel.app",
+        "http://localhost:3000"
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# ✅ Define local PDF folder
 PDF_FOLDER = "./pdfs"
 FAISS_INDEX_PATH = "./faiss_index"
 
@@ -79,7 +75,6 @@ def create_vector_store():
         text_chunks = get_text_chunks(raw_text)
         embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 
-        # Ensure FAISS index directory exists
         os.makedirs(FAISS_INDEX_PATH, exist_ok=True)
 
         vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
@@ -89,12 +84,10 @@ def create_vector_store():
     except Exception as e:
         print(f"❌ Error creating FAISS index: {e}")
 
-# ✅ Run vector store creation before starting the API
 print("⏳ Creating FAISS vector store...")
 create_vector_store()
-time.sleep(3)  # Ensure FAISS is created before the API starts
+time.sleep(3)
 
-# ✅ Define request model
 class QuestionRequest(BaseModel):
     question: str
 
@@ -128,28 +121,26 @@ def get_answer(user_question):
         print("🤖 Generating AI response...")
         model = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.3)
         prompt_template = """
-        Answer the question in a well-structured format using **Markdown**:
+        Answer the question in a well-structured format using **Markdown**:  
 
+        - Use `#` for main topics.  
+        - Use `##` for subtopics.  
+        - Use `###` for detailed sections.  
+        - Use **bold** for key terms.  
+        - Use `-` for bullet points.
+        - Maintain **proper spacing** between sections to improve readability.  
+        - Ensure **at least two blank lines** between major sections.  
+        - If the answer is not available, guide the user to refer to the admission brochure or contact:  
+          📧 *For further assistance, please email us at* **pro[AT]ipu[Dot]ac[Dot]in**.  
 
-        - **Provide relevant details** from the context.
-        - Use `#` for the main heading (topic of discussion).
-        - Use `##` for subtopics.
-        - Use `###` for further breakdowns.
-        - Use **bold** for highlighting important terms.
-        - Use bullet points `-` to list items.
-        - Organize information into **sections**.
-        - Ensure proper spacing between sections.
-        - Ensure **at least two blank lines** between major sections.
-        - If the answer is not available, say:  
-        *"Apologies! There is no information available regarding your query."*
+        Context:  
+        {context}  
 
-        Context:
-        {context}
+        Question:  
+        {question}  
 
-        Question:
-        {question}
+        Answer:  
 
-        Answer:
         """
 
         prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
@@ -171,7 +162,6 @@ def ask_question(request: QuestionRequest):
     answer = get_answer(request.question)
     return {"answer": answer}
 
-# ✅ Start FastAPI server
 if __name__ == "__main__":
     print("🚀 Starting FastAPI server...")
     import uvicorn
