@@ -87,7 +87,7 @@ export default function Chat() {
             {[
               "What are the CET dates?",
               "What is the fee for MCA?",
-              "Is CET mandatory for all courses?",
+              "What is the last date for admissions?",
               "What is the fee structure for B.Tech?",
               "What are the counselling dates for MBA?",
             ].map((faq, index) => (
