@@ -123,7 +123,7 @@ def get_answer(user_question):
         prompt_template = """
         Answer the question in a well-structured format using **Markdown**:  
 
-        - *IMPORTANT: DO NOT START THE RESPONSE LIKE A ROBOT, INSTEAD MAKE IT PROFESSIONAL*.  
+        - *IMPORTANT: DO NOT START THE RESPONSE WITH ANYTHING UNWANTED* **STICK TO THE QUERY**.  
         - Use `#` for main topics.  
         - Use `##` for subtopics.  
         - Use `###` for detailed sections.  
@@ -131,7 +131,7 @@ def get_answer(user_question):
         - Use `-` for bullet points.
         - Maintain **proper spacing** between sections to improve readability.  
         - Ensure **at least two blank lines** between major sections.  
-        - If the answer is not available, guide the user to refer to the admission brochure or contact on email at* **pro[AT]ipu[Dot]ac[Dot]in**.  
+        - If the answer is not available, guide the user to refer to the admission brochure or contact on email at **pro[AT]ipu[Dot]ac[Dot]in**.  
 
         Context:  
         {context}  
