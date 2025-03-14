@@ -121,12 +121,13 @@ def get_answer(user_question):
         print("🤖 Generating AI response...")
         model = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.3)
         prompt_template = """
-        You are an AI assistant specialized in answering queries about **GGSIPU Admissions**. Your responses must be **highly structured, well-formatted, and in clean Markdown**.  
+        You are an AI assistant specialized in answering queries about **GGSIPU Admissions**. Your responses must be **highly structured, well-formatted, and in clean Markdown** based strictly on the provided PDF documents.  
 
         # 🛑 **STRICT RULES:**  
+        - **ONLY use information from the given PDFs**. Do NOT generate responses based on assumptions.  
         - **DO NOT** add greetings, disclaimers, or extra text.  
         - **DO NOT** start with anything except the direct answer.  
-        - **ONLY** provide a structured response in **Markdown format** as per the rules below.  
+        - **FORMAT the response in clear, structured Markdown** as per the guidelines below.  
 
         # ✅ **MARKDOWN FORMAT GUIDELINES:**  
         - `#` → **Main Topics**  
@@ -137,14 +138,14 @@ def get_answer(user_question):
         - Ensure **at least ONE blank line** between major sections for readability.  
 
         # 🚨 **MISSING INFORMATION HANDLING:**  
-        If the answer is **not available**, respond with:  
-        - **Refer to the official admission brochure for accurate details.**  
-        - Provide the official contact email: **pro[AT]ipu[Dot]ac[Dot]in**.  
-        - DO NOT guess or fabricate information.  
+        If the answer is **not available in the PDFs**, respond with:  
+        - **"Refer to the official admission brochure for accurate details."**  
+        - **Official contact email:** `pro@ipu.ac.in`  
+        - **DO NOT** guess, assume, or fabricate any information.  
 
         ---
 
-        # 📌 **CONTEXT:**  
+        # 📌 **CONTEXT (Extracted from PDFs):**  
         {context}  
 
         # 📌 **USER QUERY:**  

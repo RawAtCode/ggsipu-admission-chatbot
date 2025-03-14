@@ -40,20 +40,21 @@ export default function Chat() {
     <div className="app-body">
       <Header />
 
+      {/* Main Content */}
       <div className="container">
         <div className="container-heading">
-          <h1>GGSIPU Admission Chatbot</h1>
-          <p className="text-gray-700 text-center mt-2 max-w-2xl">
+          <h1 className="text-3xl md:text-4xl font-bold text-center">GGSIPU Admission Chatbot</h1>
+          <p className="text-gray-700 text-center mt-2 max-w-2xl mx-auto text-sm md:text-base">
             Ask me anything about admission queries. I'm here to assist you!
           </p>
         </div>
 
         {/* Input Section */}
-        <div className="input-container">
+        <div className="input-container w-full md:w-4/5 lg:w-3/5 mx-auto">
           <input
             type="text"
             id="query-field"
-            className="input-field"
+            className="input-field w-full p-3 md:p-4 text-sm md:text-base"
             placeholder="How may I help you?"
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
@@ -61,7 +62,7 @@ export default function Chat() {
           />
           <button
             onClick={() => askQuestion(question)}
-            className="ask-button"
+            className="ask-button w-full p-3 md:p-4 text-sm md:text-base"
             disabled={loading}
           >
             {loading ? "Retrieving Info..." : "Ask"}
@@ -70,7 +71,7 @@ export default function Chat() {
 
         {/* Response Section */}
         {response && (
-          <div className="response-container">
+          <div className="response-container w-full md:w-4/5 lg:w-3/5 mx-auto mt-6">
             <div
               className="response-content"
               dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(marked(response)) }}
@@ -79,21 +80,22 @@ export default function Chat() {
         )}
 
         {/* FAQ Section */}
-        <div className="response-container">
+        <div className="response-container w-full md:w-4/5 lg:w-3/5 mx-auto mt-6">
           <h2 className="text-xl font-bold text-gray-800 mb-3 text-center">
             Frequently Asked Questions
           </h2>
-          <ul className="space-y-3 text-gray-700">
+          <div className="w-100 border-t border-gray-300 opacity-70 mb-5"></div>
+          <ul className="space-y-3 text-gray-650">
             {[
-              "What are the CET dates?",
+              "What are the CET examination dates?",
+              "How will the seats be allotted in GGSIPU online counselling?",
               "What is the fee for MCA?",
               "What is the last date for admissions?",
               "What is the fee structure for B.Tech?",
-              "What are the counselling dates for MBA?",
             ].map((faq, index) => (
               <li
                 key={index}
-                className="p-3 bg-white rounded-lg shadow-sm border border-gray-300 cursor-pointer hover:bg-gray-100 transition"
+                className="p-3 bg-white rounded-lg shadow-sm border border-gray-300 cursor-pointer hover:bg-gray-100 transition text-sm md:text-base whitespace-normal break-words"
                 onClick={() => handleFAQClick(faq)}
               >
                 <strong>‣ {faq}</strong>
@@ -101,6 +103,8 @@ export default function Chat() {
             ))}
           </ul>
         </div>
+
+        
       </div>
 
       <Footer />
