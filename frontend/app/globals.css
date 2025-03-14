@@ -83,7 +83,7 @@ body {
 .input-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: center;
   gap: 1.25rem; /* 20px */
   padding: 1.25rem; /* 20px */
   border: 1px solid black;
