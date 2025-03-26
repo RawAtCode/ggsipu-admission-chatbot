@@ -12,11 +12,6 @@ function Footer() {
           <a href="mailto:pro@ipu.ac.in" className="">pro@ipu.ac.in</a>,  
           <a href="mailto:admissiongrievances@ipu.ac.in" className=" ml-1">admissiongrievances@ipu.ac.in</a>
         </p>
-
-        {/* Copyright Section */}
-        <div className="text-xs p-1 mt-3 md:mt-3 text-center w-full">
-          &copy; {new Date().getFullYear()} GURU GOBIND SINGH INDRAPRASTHA UNIVERSITY, DELHI 110078. All Rights Reserved.
-        </div>
       </div>
     </footer>
   );
