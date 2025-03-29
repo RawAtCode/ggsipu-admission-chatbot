@@ -32,7 +32,7 @@ export default function Chat() {
 
   const handleFAQClick = (faq) => {
     setQuestion(faq);
-    window.scrollTo({ top: 0, behavior: "smooth" }); // Scrolls to the top
+    window.scrollTo({ top: 0, behavior: "smooth" });
     askQuestion(faq);
   };
 
