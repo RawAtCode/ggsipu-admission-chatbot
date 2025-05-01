@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "GGSIPU Admission Chatbot",
-  description: "Chatbot app for the admission queries of GGSIPU.",
+  description: "Chatbot app for admission queries.",
 };
 
 export default function RootLayout({ children }) {
