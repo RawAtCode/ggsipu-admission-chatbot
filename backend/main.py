@@ -143,6 +143,8 @@ def get_answer(user_question):
         - **Official contact email:** `pro@ipu.ac.in`  
         - **DO NOT** guess, assume, or fabricate any information.  
 
+        - **If the gemini model hits rate limit or is down, then display this message:** `Too many requests are being processed by the server currently. We appreciate your patience.` 
+
         ---
 
         # 📌 **CONTEXT (Extracted from PDFs):**  
