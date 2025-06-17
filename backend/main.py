@@ -41,13 +41,13 @@ def load_pdfs():
     text = ""
     
     if not os.path.exists(PDF_FOLDER):
-        print(f"⚠️ Warning: {PDF_FOLDER} does not exist. No PDFs loaded.")
+        print(f"Warning: {PDF_FOLDER} does not exist. No PDFs loaded.")
         return ""
 
     pdf_files = [f for f in os.listdir(PDF_FOLDER) if f.endswith(".pdf")]
 
     if not pdf_files:
-        print("⚠️ Warning: No PDF files found.")
+        print("Warning: No PDF files found.")
         return ""
 
     for pdf_file in pdf_files:
@@ -69,7 +69,7 @@ def create_vector_store():
     try:
         raw_text = load_pdfs()
         if not raw_text:
-            print("⚠️ No text extracted from PDFs. Skipping FAISS creation.")
+            print("No text extracted from PDFs. Skipping FAISS creation.")
             return
 
         text_chunks = get_text_chunks(raw_text)
@@ -79,12 +79,12 @@ def create_vector_store():
 
         vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
         vector_store.save_local(FAISS_INDEX_PATH)
-        print(f"✅ FAISS index created successfully at {FAISS_INDEX_PATH}!")
+        print(f"FAISS index created successfully at {FAISS_INDEX_PATH}!")
 
     except Exception as e:
-        print(f"❌ Error creating FAISS index: {e}")
+        print(f"Error creating FAISS index: {e}")
 
-print("⏳ Creating FAISS vector store...")
+print("Creating FAISS vector store...")
 create_vector_store()
 time.sleep(3)
 
@@ -94,42 +94,42 @@ class QuestionRequest(BaseModel):
 def get_answer(user_question):
     """ Retrieve answer from FAISS index """
     try:
-        print("🔍 Checking FAISS index file...")
+        print("Checking FAISS index file...")
         
         if not os.path.exists(f"{FAISS_INDEX_PATH}/index.faiss"):
-            print("❌ FAISS index file not found! Ensure it is created before querying.")
+            print("FAISS index file not found! Ensure it is created before querying.")
             return "Apologies! The system is still initializing. Please try again in a few minutes."
 
-        print("✅ FAISS index found! Loading FAISS...")
+        print("FAISS index found! Loading FAISS...")
         embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 
         try:
             new_db = FAISS.load_local(FAISS_INDEX_PATH, embeddings, allow_dangerous_deserialization=True)
-            print("✅ FAISS index loaded successfully!")
+            print("FAISS index loaded successfully!")
         except Exception as e:
-            print(f"❌ Error loading FAISS: {e}")
-            return f"❌ Error loading FAISS index: {e}"
+            print(f"Error loading FAISS: {e}")
+            return f"Error loading FAISS index: {e}"
 
-        print("🔍 Searching similar documents...")
+        print("Searching similar documents...")
         docs = new_db.similarity_search(user_question)
-        print(f"✅ Retrieved {len(docs)} similar docs")
+        print(f"Retrieved {len(docs)} similar docs")
 
         if not docs:
-            print("⚠️ No relevant documents found.")
+            print("No relevant documents found.")
             return "Apologies! No relevant information found."
 
-        print("🤖 Generating AI response...")
+        print("Generating AI response...")
         model = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.3)
         prompt_template = """
         You are an AI assistant specialized in answering queries about **GGSIPU Admissions**. Your responses must be **highly structured, well-formatted, and in clean Markdown** based strictly on the provided PDF documents.  
 
-        # 🛑 **STRICT RULES:**  
+        # **STRICT RULES:**  
         - **ONLY use information from the given PDFs**. Do NOT generate responses based on assumptions.  
         - **DO NOT** add greetings, disclaimers, or extra text.  
         - **DO NOT** start with anything except the direct answer.  
         - **FORMAT the response in clear, structured Markdown** as per the guidelines below.  
 
-        # ✅ **MARKDOWN FORMAT GUIDELINES:**  
+        # **MARKDOWN FORMAT GUIDELINES:**  
         - `#` → **Main Topics**  
         - `##` → **Subtopics**  
         - `###` → **Detailed Sections**  
@@ -137,7 +137,7 @@ def get_answer(user_question):
         - **Bold** → **For highlighting key terms**  
         - Ensure **at least ONE blank line** between major sections for readability.  
 
-        # 🚨 **MISSING INFORMATION HANDLING:**  
+        # **MISSING INFORMATION HANDLING:**  
         If the answer is **not available in the PDFs**, respond with:  
         - **"Refer to the official admission brochure for accurate details."**  
         - **Official contact email:** `pro@ipu.ac.in`  
@@ -147,13 +147,13 @@ def get_answer(user_question):
 
         ---
 
-        # 📌 **CONTEXT (Extracted from PDFs):**  
+        # **CONTEXT (Extracted from PDFs):**  
         {context}  
 
-        # 📌 **USER QUERY:**  
+        # **USER QUERY:**  
         {question}  
 
-        # 📌 **STRUCTURED ANSWER:**  
+        # **STRUCTURED ANSWER:**  
         
 
         """
@@ -162,13 +162,13 @@ def get_answer(user_question):
         chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
 
         response = chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
-        print("✅ AI Response Generated!")
+        print("AI Response Generated!")
 
         return response["output_text"]
 
     except Exception as e:
-        print(f"❌ Error retrieving answer: {e}")
-        return f"❌ Error: {e}"
+        print(f"Error retrieving answer: {e}")
+        return f"Error: {e}"
 
 
 @app.post("/ask")
@@ -178,9 +178,9 @@ def ask_question(request: QuestionRequest):
     return {"answer": answer}
 
 if __name__ == "__main__":
-    print("🚀 Starting FastAPI server...")
+    print("Starting FastAPI server...")
     import uvicorn
     port = int(os.environ.get("PORT", 8000))
-    print(f"🚀 Starting FastAPI server on port {port}...")
+    print(f"Starting FastAPI server on port {port}...")
     uvicorn.run(app, host="0.0.0.0", port=port)
 
