@@ -1,10 +1,7 @@
 fastapi
 uvicorn
-pydantic
-PyPDF2
-langchain
-langchain_community
-langchain_google_genai
-google-generativeai
 python-dotenv
-faiss-cpu
+PyPDF2
+groq
+langchain-text-splitters
+rank-bm25
